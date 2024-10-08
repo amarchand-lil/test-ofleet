@@ -1,0 +1,33 @@
+name: Example Workflow (Build and Push)
+
+run-name: Build ${{ github.ref_name }} image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    name: "Ofleet : build & push"
+    runs-on: ubuntu-latest
+    container: ofleet/builder:v1-stable
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the repo from branch
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+#          token: ${{ secrets.SUBMODULE_PRIVATE_TOKEN }}     if you need to checkout submodules with private token
+
+      - name: Build and Push Docker image
+        env:
+          OFLEET_ODOO_IMAGE: ofleet/odoo:13-20220523-legacy  # Replace with what you want.
+          DOCKER_REGISTRY: ghcr.io                           # ${{ vars.DOCKER_REGISTRY }}     for public registry (ie. DockerHub)
+          DOCKER_USERNAME: ${{github.actor}}                 # ${{ secrets.DOCKER_USERNAME }}  for public registry (ie. DockerHub)
+          DOCKER_PASSWORD: ${{secrets.GITHUB_TOKEN}}         # ${{ secrets.DOCKER_PASSWORD }}  for public registry (ie. DockerHub)
+        run: |
+          ofleet-prepare ${OFLEET_ODOO_IMAGE} ${GITHUB_WORKSPACE}
+          ofleet-build ${DOCKER_REGISTRY}/amarchand-lil/test-ofleet:v1 ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
