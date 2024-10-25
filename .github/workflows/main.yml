@@ -66,4 +66,4 @@ jobs:
               "readonlyFilestore": true,
               "autoShutdown": true
           }' \
-          --fail
+          --fail --verbose
