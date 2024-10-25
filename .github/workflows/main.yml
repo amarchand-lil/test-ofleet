@@ -24,14 +24,14 @@ jobs:
         run: |
           if [[ -n "${{ vars.DOCKER_REGISTRY }}" && -n "${{ vars.DOCKER_USERNAME }}" ]]; then
             echo "Using custom registry"
-            echo "${{ vars.DOCKER_REGISTRY }}" >> $DOCKER_REGISTRY
-            echo "${{ vars.DOCKER_USERNAME }}" >> $DOCKER_USERNAME
-            echo "${{ secrets.DOCKER_PASSWORD }}" >> $DOCKER_PASSWORD
+            echo "DOCKER_REGISTRY=${{ vars.DOCKER_REGISTRY }}" >> $GITHUB_ENV
+            echo "DOCKER_USERNAME=${{ vars.DOCKER_USERNAME }}" >> $GITHUB_ENV
+            echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> $GITHUB_ENV
           else
             echo "Using GitHub Container Registry (GHCR)"
-            echo "ghcr.io" >> $DOCKER_REGISTRY
-            echo "${{github.actor}}" >> $DOCKER_USERNAME
-            echo "${{secrets.GITHUB_TOKEN}}" >> $DOCKER_PASSWORD
+            echo "DOCKER_REGISTRY=ghcr.io" >> $GITHUB_ENV
+            echo "DOCKER_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+            echo "DOCKER_PASSWORD=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
           fi
       - name: Build and push image
         env:
