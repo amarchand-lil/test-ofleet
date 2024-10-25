@@ -30,4 +30,31 @@ jobs:
           DOCKER_PASSWORD: ${{secrets.GITHUB_TOKEN}}         # ${{ secrets.DOCKER_PASSWORD }}  for public registry (ie. DockerHub)
         run: |
           ofleet-prepare ${OFLEET_ODOO_IMAGE} ${GITHUB_WORKSPACE}
-          ofleet-build ${DOCKER_REGISTRY}/amarchand-lil/test-ofleet:v1 ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
+          ofleet-build ${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:${GITHUB_REF} ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
+
+  deploy:
+    name: "Trigger Deployment"
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref_type != 'tag'  # Exécute ce job seulement si ce n'est pas un tag
+    env:
+      OFLEET_TOKEN: ${{ secrets.OFLEET_TOKEN }}  # Assurez-vous de définir ce secret dans le repo
+    steps:
+      - name: Trigger deployment via CURL
+        run: |
+          curl -X 'POST' \
+            'https://console.ofleet.cloud/api/ofleet/v1/openapi/instance/odoo/cloneAsTest' \
+            -H 'accept: application/json' \
+            -H "Authorization: Bearer ${OFLEET_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "projectName": "${ secrets.PROJECT_ID} ",
+              "origin": "${ secrets.PRODUCTION_ID} ",
+              "name": "${ GITHUB_REF }",
+              "displayName": "Branche ${ GITHUB_REF }",
+              "tag": "${ GITHUB_REF }",
+              "cloneData": true,
+              "forceWriteData": false,
+              "readonlyFilestore": true,
+              "autoShutdown": true
+          }'
