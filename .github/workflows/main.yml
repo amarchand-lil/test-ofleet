@@ -20,19 +20,20 @@ jobs:
           submodules: recursive
 #          token: ${{ secrets.SUBMODULE_PRIVATE_TOKEN }}     if you need to checkout submodules with private token
 
-      - name: Set custom registry variable 
-        if: ${{ vars.DOCKER_REGISTRY != '' && vars.DOCKER_USERNAME != '' }}
-        env:
-          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
-          DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}      
-      - name: Set GHCR variable by default
-        if: ${{ vars.DOCKER_REGISTRY == '' || vars.DOCKER_USERNAME == '' }}
-        env:
-          DOCKER_REGISTRY: ghcr.io
-          DOCKER_USERNAME: ${{github.actor}}
-          DOCKER_PASSWORD: ${{secrets.GITHUB_TOKEN}}
-      - name: Build image
+      - name: Set registry variable 
+        run: |
+          if [[ -n "${{ vars.DOCKER_REGISTRY }}" && -n "${{ var.DOCKER_USERNAME }}" ]]; then
+            echo "Using custom registry"
+            echo "${{ vars.DOCKER_REGISTRY }}" >> $DOCKER_REGISTRY
+            echo "${{ vars.DOCKER_USERNAME }}" >> $DOCKER_USERNAME
+            echo "${{ secrets.DOCKER_PASSWORD }}" >> $DOCKER_PASSWORD
+          else
+            echo "Using GitHub Container Registry (GHCR)"
+            echo "ghcr.io" >> $DOCKER_REGISTRY
+            echo "${{github.actor}}" >> $DOCKER_USERNAME
+            echo "${{secrets.GITHUB_TOKEN}}" >> $DOCKER_PASSWORD
+          fi
+      - name: Build and push image
         env:
           OFLEET_ODOO_IMAGE: ${{ vars.OFLEET_ODOO_IMAGE }}
         run: |
