@@ -56,11 +56,11 @@ jobs:
             -H "Authorization: Bearer ${OFLEET_TOKEN}" \
             -H 'Content-Type: application/json' \
             -d '{
-              "projectName": "${ secrets.OFLEET_PROJECT_ID} ",
-              "origin": "${ secrets.OFLEET_PRODUCTION_ID} ",
-              "name": "${ github.ref_name }",
-              "displayName": "Branche ${ github.ref_name }",
-              "tag": "${{github.ref_name}}-${GITHUB_SHA}",
+              "projectName": "'"${{ secrets.OFLEET_PROJECT_ID }}"'",
+              "origin": "'"${{ secrets.OFLEET_PRODUCTION_ID }}"'",
+              "name": "'"${{ github.ref_name }}"'",
+              "displayName": "Branche '"${{ github.ref_name }}"'",
+              "tag": "'"${{ github.ref_name }}-${GITHUB_SHA}"'",
               "cloneData": true,
               "forceWriteData": false,
               "readonlyFilestore": true,
