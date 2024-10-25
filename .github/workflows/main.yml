@@ -22,7 +22,7 @@ jobs:
 
       - name: Set registry variable 
         run: |
-          if [[ -n "${{ vars.DOCKER_REGISTRY }}" && -n "${{ var.DOCKER_USERNAME }}" ]]; then
+          if [[ -n "${{ vars.DOCKER_REGISTRY }}" && -n "${{ vars.DOCKER_USERNAME }}" ]]; then
             echo "Using custom registry"
             echo "${{ vars.DOCKER_REGISTRY }}" >> $DOCKER_REGISTRY
             echo "${{ vars.DOCKER_USERNAME }}" >> $DOCKER_USERNAME
