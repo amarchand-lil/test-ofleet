@@ -30,7 +30,7 @@ jobs:
           DOCKER_PASSWORD: ${{secrets.GITHUB_TOKEN}}         # ${{ secrets.DOCKER_PASSWORD }}  for public registry (ie. DockerHub)
         run: |
           ofleet-prepare ${OFLEET_ODOO_IMAGE} ${GITHUB_WORKSPACE}
-          ofleet-build ${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:v1 ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
+          ofleet-build ${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:{{github.ref_name}} ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
 
   deploy:
     name: "Trigger Deployment"
