@@ -46,7 +46,7 @@ jobs:
     needs: build-and-push
     if: github.ref_type != 'tag'  # Exécute ce job seulement si ce n'est pas un tag
     env:
-      OFLEET_TOKEN: ${{ secrets.OFLEET_TOKEN }}  # Assurez-vous de définir ce secret dans le repo
+      OFLEET_TOKEN: ${{ secrets.OFLEET_TOKEN }}
     steps:
       - name: Deploy to Ofleet
         run: |
@@ -56,8 +56,8 @@ jobs:
             -H "Authorization: Bearer ${OFLEET_TOKEN}" \
             -H 'Content-Type: application/json' \
             -d '{
-              "projectName": "'"${{ secrets.OFLEET_PROJECT_ID }}"'",
-              "origin": "'"${{ secrets.OFLEET_PRODUCTION_ID }}"'",
+              "projectName": "'"${{ vars.OFLEET_PROJECT_ID }}"'",
+              "origin": "'"${{ vars.OFLEET_PRODUCTION_ID }}"'",
               "name": "'"${{ github.ref_name }}"'",
               "displayName": "Branche '"${{ github.ref_name }}"'",
               "tag": "'"${{ github.ref_name }}-${GITHUB_SHA}"'",
