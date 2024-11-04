@@ -4,6 +4,10 @@ run-name: Build ${{ github.ref_name }} image
 
 on:
   push:
+    branches:
+      - '**'
+    tags:
+      - '**'
 
 jobs:
   build-and-push:
