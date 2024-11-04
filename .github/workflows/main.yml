@@ -47,23 +47,9 @@ jobs:
     if: github.ref_type != 'tag'  # Exécute ce job seulement si ce n'est pas un tag
     env:
       OFLEET_TOKEN: ${{ secrets.OFLEET_TOKEN }}
+      OFLEET_PROJECT_ID: ${{ env.OFLEET_PROJECT_ID }}
+      OFLEET_PRODUCTION_ID: ${{ env.OFLEET_PRODUCTION_ID }}
     steps:
       - name: Deploy to Ofleet
         run: |
-          curl -X 'POST' \
-            'https://console.ofleet.cloud/api/ofleet/v1/openapi/instance/odoo/cloneAsTest' \
-            -H 'accept: application/json' \
-            -H "Authorization: Bearer ${OFLEET_TOKEN}" \
-            -H 'Content-Type: application/json' \
-            -d '{
-              "projectName": "'"${{ vars.OFLEET_PROJECT_ID }}"'",
-              "origin": "'"${{ vars.OFLEET_PRODUCTION_ID }}"'",
-              "name": "'"${{ github.ref_name }}"'",
-              "displayName": "Branche '"${{ github.ref_name }}"'",
-              "tag": "'"${{ github.ref_name }}-${GITHUB_SHA}"'",
-              "cloneData": true,
-              "forceWriteData": false,
-              "readonlyFilestore": true,
-              "autoShutdown": true
-          }' \
-          --fail --verbose
+          ofleet-deploy "${OFLEET_TOKEN}" "${OFLEET_PROJECT_ID}" "${OFLEET_PRODUCTION_ID}" "${{github.ref_name}}-${GITHUB_SHA}" "${{github.ref_name}}"
