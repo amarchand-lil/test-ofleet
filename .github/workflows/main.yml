@@ -47,6 +47,7 @@ jobs:
   deploy:
     name: "Trigger Deployment"
     runs-on: ubuntu-latest
+    container: ofleet/builder:v1-stable
     needs: build-and-push
     if: github.ref_type != 'tag'  # Exécute ce job seulement si ce n'est pas un tag
     env:
