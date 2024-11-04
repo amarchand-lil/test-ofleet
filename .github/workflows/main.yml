@@ -42,7 +42,7 @@ jobs:
           OFLEET_ODOO_IMAGE: ${{ vars.OFLEET_ODOO_IMAGE }}
         run: |
           ofleet-prepare ${OFLEET_ODOO_IMAGE} ${GITHUB_WORKSPACE}
-          ofleet-build ${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:${{github.ref_name}}-${GITHUB_SHA} ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
+          ofleet-build "${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:${{github.ref_name}}-${GITHUB_SHA}" ${DOCKER_REGISTRY} ${DOCKER_USERNAME} ${DOCKER_PASSWORD} ${GITHUB_WORKSPACE}
 
   deploy:
     name: "Trigger Deployment"
