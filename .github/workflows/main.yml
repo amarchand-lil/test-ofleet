@@ -47,8 +47,8 @@ jobs:
     if: github.ref_type != 'tag'  # Exécute ce job seulement si ce n'est pas un tag
     env:
       OFLEET_TOKEN: ${{ secrets.OFLEET_TOKEN }}
-      OFLEET_PROJECT_ID: ${{ env.OFLEET_PROJECT_ID }}
-      OFLEET_PRODUCTION_ID: ${{ env.OFLEET_PRODUCTION_ID }}
+      OFLEET_PROJECT_ID: ${{ vars.OFLEET_PROJECT_ID }}
+      OFLEET_PRODUCTION_ID: ${{ vars.OFLEET_PRODUCTION_ID }}
     steps:
       - name: Deploy to Ofleet
         run: |
