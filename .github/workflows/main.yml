@@ -46,7 +46,7 @@ jobs:
           echo "${{github.ref_name}}"
           echo "${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:${{github.ref_name}}-${GITHUB_SHA}"
           ofleet-prepare ${OFLEET_ODOO_IMAGE} ${GITHUB_WORKSPACE}
-          ofleet-build "${DOCKER_REGISTRY}/${GITHUB_REPOSITORY}:${{github.ref_name}}-${GITHUB_SHA}" "${DOCKER_REGISTRY}" "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}" "${GITHUB_WORKSPACE}"
+          ofleet-build "${DOCKER_REGISTRY}" "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}" "${GITHUB_REPOSITORY}" "${{github.ref_name}}-${GITHUB_SHA}" "${GITHUB_WORKSPACE}"
 
   deploy:
     name: "Trigger Deployment"
