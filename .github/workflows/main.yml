@@ -14,6 +14,10 @@ jobs:
     name: "Ofleet : build & push"
     runs-on: ubuntu-latest
     container: ofleet/builder:v1-stable
+    env:
+      DOCKER_REGISTRY: "ghcr.io"
+      DOCKER_USERNAME: ${{ github.actor }}
+      DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: read
       packages: write
@@ -23,20 +27,6 @@ jobs:
         with:
           submodules: recursive
 #          token: ${{ secrets.SUBMODULE_PRIVATE_TOKEN }}     if you need to checkout submodules with private token
-
-      - name: Set registry variable 
-        run: |
-          if [[ -n "${{ vars.DOCKER_REGISTRY }}" && -n "${{ vars.DOCKER_USERNAME }}" ]]; then
-            echo "Using custom registry"
-            echo "DOCKER_REGISTRY=${{ vars.DOCKER_REGISTRY }}" >> $GITHUB_ENV
-            echo "DOCKER_USERNAME=${{ vars.DOCKER_USERNAME }}" >> $GITHUB_ENV
-            echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> $GITHUB_ENV
-          else
-            echo "Using GitHub Container Registry (GHCR)"
-            echo "DOCKER_REGISTRY=ghcr.io" >> $GITHUB_ENV
-            echo "DOCKER_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
-            echo "DOCKER_PASSWORD=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-          fi
       - name: Build and push image
         env:
           OFLEET_ODOO_IMAGE: ${{ vars.OFLEET_ODOO_IMAGE }}
@@ -49,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ofleet/builder:v1-stable
     needs: build-and-push
-    if: github.ref_type != 'tag'  # Exécute ce job seulement si ce n'est pas un tag
+    if: github.ref_type != 'tag'  # Do not execute for release
     env:
       OFLEET_TOKEN: ${{ secrets.OFLEET_TOKEN }}
       OFLEET_PROJECT_ID: ${{ vars.OFLEET_PROJECT_ID }}
