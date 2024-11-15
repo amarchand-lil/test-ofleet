@@ -2,3 +2,6 @@
 	path = social
 	url = https://github.com/OCA/social.git
 	branch = 13.0
+[submodule "private-submodule"]
+	path = private-submodule
+	url = https://github.com/amarchand-lil/private-submodule
