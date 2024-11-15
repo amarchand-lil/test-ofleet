@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.SUBMODULE_PRIVATE_TOKEN }}     if you need to checkout submodules with private token
+          token: ${{ secrets.SUBMODULE_PRIVATE_TOKEN }}
       - name: Set registry variable 
         run: |
           if [[ -n "${{ vars.DOCKER_REGISTRY }}" && -n "${{ vars.DOCKER_USERNAME }}" ]]; then
